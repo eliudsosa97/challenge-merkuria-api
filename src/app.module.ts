@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Product } from './products/entities/product.entity';
+import { SeedModule } from './database/seeds/seed.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { Product } from './products/entities/product.entity';
       entities: [Product],
       synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
     }),
+    ProductsModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
