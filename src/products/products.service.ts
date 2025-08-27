@@ -18,46 +18,52 @@ export class ProductsService {
     return this.productRepository.save(product);
   }
 
-  async findAll(queryDto: QueryProductDto): Promise<Product[]> {
+  async findAll(
+    queryDto: QueryProductDto,
+  ): Promise<{ data: Product[]; total: number }> {
+    const { page = 1, limit = 10, ...filters } = queryDto;
+    const skip = (page - 1) * limit;
     const query = this.productRepository.createQueryBuilder('product');
 
     // Filtrar por categoría
-    if (queryDto.category) {
+    if (filters.category) {
       query.andWhere('product.category = :category', {
-        category: queryDto.category,
+        category: filters.category,
       });
     }
 
     // Filtrar por rango de precio
-    if (queryDto.minPrice !== undefined && queryDto.maxPrice !== undefined) {
+    if (filters.minPrice !== undefined && filters.maxPrice !== undefined) {
       query.andWhere('product.price BETWEEN :minPrice AND :maxPrice', {
-        minPrice: queryDto.minPrice,
-        maxPrice: queryDto.maxPrice,
+        minPrice: filters.minPrice,
+        maxPrice: filters.maxPrice,
       });
-    } else if (queryDto.minPrice !== undefined) {
+    } else if (filters.minPrice !== undefined) {
       query.andWhere('product.price >= :minPrice', {
-        minPrice: queryDto.minPrice,
+        minPrice: filters.minPrice,
       });
-    } else if (queryDto.maxPrice !== undefined) {
+    } else if (filters.maxPrice !== undefined) {
       query.andWhere('product.price <= :maxPrice', {
-        maxPrice: queryDto.maxPrice,
+        maxPrice: filters.maxPrice,
       });
     }
 
     // Búsqueda por nombre
-    if (queryDto.search) {
+    if (filters.search) {
       query.andWhere('product.name ILIKE :search', {
-        search: `%${queryDto.search}%`,
+        search: `%${filters.search}%`,
       });
     }
 
     // Ordenamiento
-    if (queryDto.sortBy) {
-      const order = queryDto.sortOrder || 'ASC';
-      query.orderBy(`product.${queryDto.sortBy}`, order);
+    if (filters.sortBy) {
+      const order = filters.sortOrder || 'ASC';
+      query.orderBy(`product.${filters.sortBy}`, order);
     }
 
-    return query.getMany();
+    const [data, total] = await query.skip(skip).take(limit).getManyAndCount();
+
+    return { data, total };
   }
 
   async findOne(id: string): Promise<Product> {
@@ -72,13 +78,13 @@ export class ProductsService {
     id: string,
     updateProductDto: UpdateProductDto,
   ): Promise<Product> {
-    await this.findOne(id); // Verificar que existe
+    await this.findOne(id);
     await this.productRepository.update(id, updateProductDto);
     return this.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
-    await this.findOne(id); // Verificar que existe
+    await this.findOne(id);
     await this.productRepository.delete(id);
   }
 
