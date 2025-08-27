@@ -91,20 +91,41 @@ export class ProductsService {
     return result.map((item) => item.category);
   }
 
-  async getStatistics(): Promise<any> {
-    const categoryStats = await this.productRepository
-      .createQueryBuilder('product')
+  async getStatistics(queryDto: QueryProductDto): Promise<any> {
+    const queryBuilder = this.productRepository.createQueryBuilder('product');
+
+    if (queryDto.category) {
+      queryBuilder.andWhere('product.category = :category', {
+        category: queryDto.category,
+      });
+    }
+    if (queryDto.minPrice !== undefined) {
+      queryBuilder.andWhere('product.price >= :minPrice', {
+        minPrice: queryDto.minPrice,
+      });
+    }
+    if (queryDto.maxPrice !== undefined) {
+      queryBuilder.andWhere('product.price <= :maxPrice', {
+        maxPrice: queryDto.maxPrice,
+      });
+    }
+    if (queryDto.search) {
+      queryBuilder.andWhere('product.name ILIKE :search', {
+        search: `%${queryDto.search}%`,
+      });
+    }
+
+    const totalProducts = await queryBuilder.getCount();
+
+    const averagePriceResult = await queryBuilder
+      .select('AVG(product.price)', 'avg')
+      .getRawOne();
+
+    const categoryStats = await queryBuilder
       .select('product.category', 'category')
       .addSelect('COUNT(product.id)', 'count')
       .groupBy('product.category')
       .getRawMany();
-
-    const totalProducts = await this.productRepository.count();
-
-    const averagePriceResult = await this.productRepository
-      .createQueryBuilder('product')
-      .select('AVG(product.price)', 'avg')
-      .getRawOne();
 
     const averagePrice = parseFloat(averagePriceResult.avg) || 0;
 
@@ -113,13 +134,11 @@ export class ProductsService {
       averagePrice,
       byCategory: categoryStats.map((item) => {
         const count = parseInt(item.count, 10) || 0;
-
         const percentage =
           totalProducts > 0 ? (count / totalProducts) * 100 : 0;
-
         return {
           category: item.category,
-          count: count,
+          count,
           percentage: parseFloat(percentage.toFixed(2)),
         };
       }),

@@ -34,8 +34,8 @@ export class ProductsController {
   }
 
   @Get('statistics')
-  getStatistics() {
-    return this.productsService.getStatistics();
+  getStatistics(@Query() queryDto: QueryProductDto) {
+    return this.productsService.getStatistics(queryDto);
   }
 
   @Get(':id')
