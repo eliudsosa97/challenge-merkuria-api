@@ -2,8 +2,6 @@
 
 Aplicación backend para gestionar un catálogo de productos: CRUD, filtros, ordenamiento, estadísticas y utilidades para el frontend (Next.js). Desarrollado con NestJS + TypeORM + PostgreSQL y probado con Jest (unitarias y e2e).
 
-– Merkur.ia — 2025.
-
 ---
 
 ## Stack y características
@@ -193,20 +191,21 @@ Recuerda ejecutar migraciones y (opcionalmente) el seed en el entorno remoto.
 
 ## Uso de asistentes de IA durante el desarrollo
 
-Se utilizó GitHub Copilot como apoyo para:
+Se utilizaron asistentes de IA de forma complementaria:
 
-- Esqueleto de módulos, DTOs y validaciones
-- Consultas TypeORM y filtros
-- Redacción de pruebas e2e/units
-- Documentación (este README)
+- Gemini Pro (chat): para resolver dudas variadas, pedir explicaciones rápidas y ayudar a interpretar/leer mensajes de error.
+- GitHub Copilot (con GPT-5): para completaciones en el editor, corrección de bugs sencillos, creación de tests (unitarios y e2e) y añadir comentarios puntuales en el código.
 
 Ejemplos de prompts usados:
 
 - “Crea un servicio NestJS para productos con filtros por categoría, rango de precio y búsqueda por nombre usando TypeORM QueryBuilder.”
 - “Genera DTOs con class-validator para crear y actualizar un producto; rating opcional 1..5.”
 - “Escribe un test e2e que cree un producto y lo consulte por id.”
+- “Explícame este error de TypeORM y sugiere posibles causas.” (Gemini Pro)
+- "Ayudame a verificar la estructura de mi API"
 
-Revisión humana: todo el código generado fue revisado, ajustado y probado localmente.
+Todo con revisión humana.
+Todas las salidas de IA se verificaron con linters, pruebas y pruebas manuales antes de integrarlas.
 
 ---
 
@@ -220,6 +219,4 @@ Revisión humana: todo el código generado fue revisado, ajustado y probado loca
 
 ---
 
-## Contacto
-
-Para dudas del reto o mejoras, abre un issue o contacta al autor del repositorio.
+Eliud Sosa | 2025
