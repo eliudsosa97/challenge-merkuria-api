@@ -2,6 +2,8 @@
 
 Aplicación backend para gestionar un catálogo de productos: CRUD, filtros, ordenamiento, estadísticas y utilidades para el frontend (Next.js). Desarrollado con NestJS + TypeORM + PostgreSQL y probado con Jest (unitarias y e2e).
 
+Demo: https://challenge-merkuria-app-qnov-one.vercel.app/
+
 ---
 
 ## Stack y características
@@ -44,7 +46,7 @@ Véase `src/products/entities/product.entity.ts` y la migración `src/database/m
 1. Clonar e instalar dependencias:
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/eliudsosa97/challenge-merkuria-api
 cd challenge-merkuria-api
 npm install
 ```
@@ -174,7 +176,11 @@ Estructura de tests:
 
 ## Despliegue
 
-- Backend: compatible con Render, Railway, Fly.io, Heroku (Procfile: `web: npm run start:prod`). Define `DATABASE_URL` y `PORT`. En entornos cloud que fuerzan SSL, este proyecto lo habilita automáticamente (`ssl: { rejectUnauthorized: false }`).
+- Estado actual: backend y base de datos están desplegados en Heroku (Heroku Postgres).
+  - URL de producción (API): https://challenge-merkuria-api-215ba9385fca.herokuapp.com/api/
+  - En Heroku, configura `DATABASE_URL` y `PORT` en Config Vars. El `Procfile` ya está incluido (`web: npm run start:prod`).
+  - Al usar `DATABASE_URL`, el proyecto activa SSL automáticamente (`ssl: { rejectUnauthorized: false }`).
+- Backend: compatible también con Render, Railway y Fly.io.
 - Frontend (Next.js): despliegue recomendado en Vercel. El frontend consumirá este backend vía la URL pública del servicio.
 
 Recuerda ejecutar migraciones y (opcionalmente) el seed en el entorno remoto.
