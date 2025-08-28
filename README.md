@@ -1,98 +1,225 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+## Reto Técnico — Backend de Gestión de Productos (NestJS)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Aplicación backend para gestionar un catálogo de productos: CRUD, filtros, ordenamiento, estadísticas y utilidades para el frontend (Next.js). Desarrollado con NestJS + TypeORM + PostgreSQL y probado con Jest (unitarias y e2e).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+– Merkur.ia — 2025.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Stack y características
 
-## Project setup
+- NestJS 11, TypeScript, TypeORM 0.3
+- PostgreSQL (local o en la nube). Soporte para `DATABASE_URL` con SSL (p. ej. Render/Neon/Railway)
+- Validación con class-validator/class-transformer y `ValidationPipe` global (whitelist + transform)
+- Prefijo global de API: `/api`
+- Migraciones y seeding inicial de productos
+- Tests unitarios y end-to-end con Jest y Supertest
 
-```bash
-$ npm install
-```
+---
 
-## Compile and run the project
+## Estructura de datos (tabla `products`)
 
-```bash
-# development
-$ npm run start
+Columns:
 
-# watch mode
-$ npm run start:dev
+- id (uuid, PK)
+- name (varchar)
+- category (varchar)
+- price (decimal 10,2)
+- rating (decimal 2,1, default 0)
+- stock (int, default 0)
+- createdAt (timestamp, auto)
+- updatedAt (timestamp, auto)
 
-# production mode
-$ npm run start:prod
-```
+Véase `src/products/entities/product.entity.ts` y la migración `src/database/migrations/*InitialSetup*.ts`.
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ npm run test
+## Requisitos previos
 
-# e2e tests
-$ npm run test:e2e
+- Node.js 18+ y npm
+- PostgreSQL 13+
 
-# test coverage
-$ npm run test:cov
-```
+---
 
-## Deployment
+## Configuración rápida
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+1. Clonar e instalar dependencias:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+git clone <repo-url>
+cd challenge-merkuria-api
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+2. Variables de entorno (crea `.env` en la raíz):
 
-## Resources
+Usa una URL completa (recomendado en cloud) o credenciales separadas.
 
-Check out a few resources that may come in handy when working with NestJS:
+```env
+# Opción A: URL única (con SSL en cloud)
+DATABASE_URL=postgres://user:pass@host:5432/dbname
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Opción B: credenciales por campo (para local)
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_NAME=challenge
 
-## Support
+# Puerto del servidor
+PORT=3000
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+3. Migraciones y seed inicial:
 
-## Stay in touch
+```bash
+# Genera esquema
+npm run migration:run
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Inserta productos de ejemplo
+npm run seed
+```
 
-## License
+4. Levantar servidor:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+# desarrollo (watch)
+npm run start:dev
+
+# producción (requiere build previo si usas dist)
+npm run start:prod
+```
+
+La API quedará en: http://localhost:${PORT:-3000}/api
+
+---
+
+## Endpoints principales
+
+Base URL: `/api/products`
+
+- POST `/` — Crear producto
+- GET `/` — Listar con filtros/ordenamiento/paginación
+- GET `/categories` — Categorías únicas
+- GET `/statistics` — Estadísticas (total, precio promedio, conteo por categoría)
+- GET `/:id` — Obtener por id (uuid)
+- PATCH `/:id` — Actualizar
+- DELETE `/:id` — Eliminar
+
+### Cuerpo de creación/actualización
+
+```json
+{
+  "name": "Croquetas para Cachorro 10kg",
+  "category": "Alimento",
+  "price": 899.99,
+  "rating": 4.8,
+  "stock": 30
+}
+```
+
+Validaciones clave:
+
+- name, category: string
+- price: number >= 0
+- rating: number 1..5 (opcional)
+- stock: number >= 0 (opcional)
+
+### Query params de listado y estadísticas
+
+- `category`: string
+- `minPrice`, `maxPrice`: number
+- `search`: string (ILIKE sobre name)
+- `sortBy`: `name` | `price`
+- `sortOrder`: `ASC` | `DESC`
+- `page`: number >= 1 (default 1)
+- `limit`: number >= 1 (default 10)
+
+Ejemplo:
+
+`GET /api/products?category=Alimento&minPrice=100&maxPrice=1000&sortBy=price&sortOrder=ASC&page=1&limit=12`
+
+---
+
+## Scripts útiles
+
+- `npm run start:dev` — desarrollo con watch
+- `npm run start:prod` — producción (usa `Procfile` para plataformas tipo Heroku/Railway)
+- `npm run build` — compilar a `dist`
+- `npm run migration:run` — ejecutar migraciones (usa `src/data-source.ts`)
+- `npm run migration:generate` — generar nueva migración desde los entities
+- `npm run seed` — ejecutar seeding inicial
+- `npm run test` — tests unitarios
+- `npm run test:e2e` — tests end-to-end
+- `npm run test:cov` — cobertura
+
+Nota: Los scripts `db:*` que refieren a `src/config/database.config.ts` no se usan en este repo; utiliza los de `migration:*`.
+
+---
+
+## Pruebas
+
+Ejecutar unitarias y e2e:
+
+```bash
+npm run test
+npm run test:e2e
+npm run test:cov
+```
+
+Estructura de tests:
+
+- Unitarias: `src/**/*.spec.ts`
+- E2E: `test/*.e2e-spec.ts` (usa Supertest contra la app Nest)
+
+---
+
+## Despliegue
+
+- Backend: compatible con Render, Railway, Fly.io, Heroku (Procfile: `web: npm run start:prod`). Define `DATABASE_URL` y `PORT`. En entornos cloud que fuerzan SSL, este proyecto lo habilita automáticamente (`ssl: { rejectUnauthorized: false }`).
+- Frontend (Next.js): despliegue recomendado en Vercel. El frontend consumirá este backend vía la URL pública del servicio.
+
+Recuerda ejecutar migraciones y (opcionalmente) el seed en el entorno remoto.
+
+---
+
+## Seguridad y consideraciones
+
+- CORS habilitado por defecto
+- Validación estricta (whitelist, transform y `forbidNonWhitelisted`)
+- Endpoints públicos para el reto; para producción, se recomienda proteger escritura (POST/PATCH/DELETE) con autenticación y añadir rate limiting
+
+---
+
+## Uso de asistentes de IA durante el desarrollo
+
+Se utilizó GitHub Copilot como apoyo para:
+
+- Esqueleto de módulos, DTOs y validaciones
+- Consultas TypeORM y filtros
+- Redacción de pruebas e2e/units
+- Documentación (este README)
+
+Ejemplos de prompts usados:
+
+- “Crea un servicio NestJS para productos con filtros por categoría, rango de precio y búsqueda por nombre usando TypeORM QueryBuilder.”
+- “Genera DTOs con class-validator para crear y actualizar un producto; rating opcional 1..5.”
+- “Escribe un test e2e que cree un producto y lo consulte por id.”
+
+Revisión humana: todo el código generado fue revisado, ajustado y probado localmente.
+
+---
+
+## Estructura del proyecto (alto nivel)
+
+- `src/products` — módulo de productos (controller, service, DTOs, entity)
+- `src/database/migrations` — migraciones
+- `src/database/seeds` — seeding de datos de ejemplo
+- `src/data-source.ts` — configuración de TypeORM CLI (migraciones)
+- `test/` — pruebas e2e
+
+---
+
+## Contacto
+
+Para dudas del reto o mejoras, abre un issue o contacta al autor del repositorio.
